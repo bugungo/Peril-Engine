@@ -3,8 +3,7 @@
 #include <fstream>
 #include <math.h>
 #include <vector>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL2_gfxPrimitives.h>
+
 #include "Peril.h"
 
 //int Peril::FNcross(int x1, int y1, double x2, double y2) {
@@ -20,7 +19,6 @@
 //	x = Peril::FNcross(x, x1-x2, y, x3-x4) / det;
 //	y = Peril::FNcross(x, y1-y2, y, y3-y4) / det;
 //}
-
 void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &tlin)  {
 	Peril::Line tline = line;
 	tline.x1 = line.x1 - players.x;
@@ -44,21 +42,8 @@ void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &
 	tlin = tline;
 }
 
-void Peril::InitSDL() {
-	Peril::window = SDL_CreateWindow("Peril", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, Peril::SCREEN_SIZE, Peril::SCREEN_SIZE, SDL_WINDOW_SHOWN);
-	Peril::renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-};
-
-void Peril::QuitSDL() {
-	SDL_Quit();
-}
-
 void Peril::InitPeril() {
-	Peril::player.x = 0;
-	Peril::player.y = 0;
-	Peril::player.angle = 0;
+	
 }
 
 void Peril::LoadMap(std::string filename) {
@@ -101,11 +86,8 @@ void Peril::LoadMap(std::string filename) {
         }
 }
 
-void Peril::Delay(int a) {
-	SDL_Delay(a);
-}
-
 void Peril::MoveUp() {
+	std::cout << "Move up" << std::endl;
 	Peril::player.x += Peril::player.pcos();
 	Peril::player.y += Peril::player.psin();
 }
@@ -122,34 +104,6 @@ void Peril::MoveLeft() {
 	Peril::player.y += Peril::player.pcos();
 }
 
-void Peril::GetInput() {
-	SDL_Event event;
-	if (SDL_PollEvent(&event)) {
-		switch(event.type) {
-			case SDL_QUIT: Peril::gameover = 1; break;
-			case SDL_KEYDOWN:
-				if (event.key.keysym.sym == SDLK_w) {Peril::up = 1;}
-                                if (event.key.keysym.sym == SDLK_s) {Peril::down = 1;}
-                                if (event.key.keysym.sym == SDLK_a) {Peril::left = 1;}
-                                if (event.key.keysym.sym == SDLK_d) {Peril::right = 1;}
-			break;
-                        case SDL_KEYUP:
-                                if (event.key.keysym.sym == SDLK_w) {Peril::up = 0;}
-                                if (event.key.keysym.sym == SDLK_s) {Peril::down = 0;}
-                                if (event.key.keysym.sym == SDLK_a) {Peril::left = 0;}
-                                if (event.key.keysym.sym == SDLK_d) {Peril::right = 0;}
-                        break;
-		}
-	}
-	if (Peril::up == 1) {Peril::MoveUp();}
-	if (Peril::down == 1) {Peril::MoveDown();}
-	if (Peril::left == 1) {Peril::MoveLeft();}
-	if (Peril::right == 1) {Peril::MoveRight();}
-	SDL_GetRelativeMouseState(&x, &y);
-	Peril::player.angle += x * 0.03;
-	std::cout << player.angle << std::endl;
-}
-
 void Peril::DoLines() {
 	for (int i=0; i<Peril::tlines.size(); i++) {
 		TransformLine(Peril::lines[i], Peril::player, Peril::tlines[i]);
@@ -161,24 +115,20 @@ void Peril::DoLines() {
 		int y1b = (Peril::SCREEN_SIZE/2) / tlines[i].z1;
 		int y2a = (-(Peril::SCREEN_SIZE/2)) / tlines[i].z2;
 		int y2b = (Peril::SCREEN_SIZE/2) / tlines[i].z2;
+
+		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 		short int wallx[] = {(Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2};
 		short int wally[] = {(Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a, (Peril::SCREEN_SIZE/2)+y2a};
-                filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
-                short int wallx1[] = {(Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1};
-                short int wally1[] = {(Peril::SCREEN_SIZE/2)+y1b, (Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a};
-                filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
-                SDL_RenderDrawLine(renderer, ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
-                SDL_RenderDrawLine(renderer, ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
-                SDL_RenderDrawLine(renderer, ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b));
-                SDL_RenderDrawLine(renderer, ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
+        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
+        short int wallx1[] = {(Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1};
+        short int wally1[] = {(Peril::SCREEN_SIZE/2)+y1b, (Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a};
+    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
+		
+                this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
+                this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
+                this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b));
+                this->DrawLine(((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
 
 	}
 }
 
-void Peril::DrawSDL() {
-	SDL_RenderPresent(Peril::renderer);
-	SDL_SetRenderDrawColor(Peril::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
-	SDL_RenderClear(Peril::renderer);
-	SDL_SetRenderDrawColor(Peril::renderer, 0, 0, 0, 0);
-}

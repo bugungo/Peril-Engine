@@ -1,12 +1,14 @@
 #ifndef PERIL_H
 #define PERIL_H
-#include <SDL2/SDL.h>
+
 #include <string>
 #include <vector>
 
-class Peril {
+#include "core.h"
+
+class Peril : public Core{
 	private:
-		struct Player {
+		/*struct Player {
 			int x;
 			int y;
 			double angle;
@@ -18,7 +20,7 @@ class Peril {
 				double r = round(sin(angle));
 				return r;
 			}
-		};
+		};*/
 		struct Line {
 			int x1;
 			int y1;
@@ -27,12 +29,12 @@ class Peril {
 			int z1;
 			int z2;
 		};
-		SDL_Window* window;
-		SDL_Renderer* renderer;
+		//SDL_Window* window;
+		//SDL_Renderer* renderer;
 		std::vector<Line> lines;
 		std::vector<Line> tlines;
 		Line templine;
-		Player player;
+		//Player player;
 		int FNcross(int, int, double, double);
 		void Intersect(int, int, int ,int, double, double, int, int, int&, int&);
 		void TransformLine(Line, Player, Line&);
@@ -47,16 +49,21 @@ class Peril {
 		int x;
 		int y;
 	public:
+		Peril(){
+			Peril::player.x = 0;
+			Peril::player.y = 0;
+			Peril::player.angle = 0;
+		};
 		const int SCREEN_SIZE = 400;
 		int gameover = 0;
-		void InitSDL();
-		void QuitSDL();
+		// - void InitSDL();
+		// - void QuitSDL();
 		void InitPeril();
 		void LoadMap(std::string);
-		void Delay(int);
-		void GetInput();
+		// - void Delay(int);
+		// - void GetInput();
 		void DoLines();
-		void DrawSDL();
+		// - void DrawSDL();
 };
 
 #endif

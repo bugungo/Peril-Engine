@@ -5,7 +5,8 @@
 
 int main(int argc, char *args[]) {
 	Peril peril;
-	peril.InitSDL();
+	//peril.InitSDL();
+	peril.CreateWindow("Test", 400, 400);
 	peril.InitPeril();
 	std::string fn(args[1]);
 	peril.LoadMap(fn);
@@ -14,7 +15,7 @@ int main(int argc, char *args[]) {
 		peril.Delay(5);
 		peril.GetInput();
 		peril.DoLines();
-		peril.DrawSDL();
+		peril.Redraw();
 	}
-	peril.QuitSDL();
+	//peril.QuitSDL();
 }
