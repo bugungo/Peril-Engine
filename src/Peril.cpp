@@ -120,3 +120,21 @@ void Peril::DoLines() {
 	gameover = Core::gameover;
 }
 
+void Peril::Move(int up, int down, int left, int right){
+	float acceleration = 0;
+	float vel1 = 0;
+	float vel2 = 0;
+	if (up == 1) {vel1 += cos(this->player.angle)*1.2; vel2 += sin(this->player.angle)*1.2;}
+	if (down == 1) {vel1 -= cos(this->player.angle)*1.2; vel2 -= sin(this->player.angle)*1.2;}
+	if (left == 1) {vel1 += sin(this->player.angle)*1.2; vel2 -= cos(this->player.angle)*1.2;}
+	if (right == 1) {vel1 -= sin(this->player.angle)*1.2; vel2 += cos(this->player.angle)*1.2;}
+	if (up == 1 || down == 1 || right == 1 || left == 1) {
+		acceleration = 0.4;
+	}
+	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
+	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
+	std::cout << this->player.velocity.x << ", " << this->player.velocity.y << std::endl;
+	this->MoveBy(vel1, vel2);
+	SDL_GetRelativeMouseState(&x, &y);
+	this->player.angle += x * 0.03;
+}

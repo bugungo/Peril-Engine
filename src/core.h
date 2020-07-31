@@ -61,6 +61,7 @@ class Core{
         Player player;
 
         virtual void MoveBy(int, int){};
+        virtual void Move(int, int, int, int){};
 
 };
 

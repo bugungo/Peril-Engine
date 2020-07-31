@@ -39,6 +39,7 @@ class Peril : public Core{
 		void Intersect(int, int, int ,int, double, double, int, int, int&, int&);
 		void TransformLine(Line, Player, Line&);
 		void MoveBy(int, int);
+		void Move(int, int, int, int);
 		int up = 0;
 		int down = 0;
 		int left = 0;
