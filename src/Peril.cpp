@@ -86,21 +86,9 @@ void Peril::LoadMap(std::string filename) {
         }
 }
 
-void Peril::MoveUp() {
-	Peril::player.x += Peril::player.pcos();
-	Peril::player.y += Peril::player.psin();
-}
-void Peril::MoveDown() {
-	Peril::player.x -= Peril::player.pcos();
-	Peril::player.y -= Peril::player.psin();
-}
-void Peril::MoveRight() {
-	Peril::player.x -= Peril::player.psin();
-	Peril::player.y -= Peril::player.pcos();
-}
-void Peril::MoveLeft() {
-	Peril::player.x += Peril::player.psin();
-	Peril::player.y += Peril::player.pcos();
+void Peril::MoveBy(int x, int y) {
+	Peril::player.x += x;
+	Peril::player.y += y;
 }
 
 void Peril::DoLines() {
@@ -108,12 +96,12 @@ void Peril::DoLines() {
 		TransformLine(Peril::lines[i], Peril::player, Peril::tlines[i]);
 	}
 	for (int i=0; i<Peril::tlines.size(); i++) {
-	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
-	        int x2 = -tlines[i].x2 * 160 / tlines[i].z2;
-		int y1a = (-(Peril::SCREEN_SIZE/2)) / tlines[i].z1;
-		int y1b = (Peril::SCREEN_SIZE/2) / tlines[i].z1;
-		int y2a = (-(Peril::SCREEN_SIZE/2)) / tlines[i].z2;
-		int y2b = (Peril::SCREEN_SIZE/2) / tlines[i].z2;
+	        int x1 = -tlines[i].x1 * 200 / tlines[i].z1;
+	        int x2 = -tlines[i].x2 * 200 / tlines[i].z2;
+		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1;
+		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1;
+		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2;
+		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2;
 
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 		short int wallx[] = {(Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2};

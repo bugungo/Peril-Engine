@@ -15,7 +15,9 @@ void Core::CreateRenderer(){
 }
 
 void Core::GetInput() {
+	std::cout << this->player.angle << std::endl;
 	SDL_Event event;
+	float acceleration = 0;
 	if (SDL_PollEvent(&event)) {
 		switch(event.type) {
 			case SDL_QUIT: this->gameover = 1; break;
@@ -34,10 +36,19 @@ void Core::GetInput() {
                         break;
 		}
 	}
-	if (this->up == 1) {this->MoveUp();}
-	if (this->down == 1) {this->MoveDown();}
-	if (this->left == 1) {this->MoveLeft();}
-	if (this->right == 1) {this->MoveRight();}
+	float vel1 = 0;
+	float vel2 = 0;
+	if (this->up == 1) {vel1 += cos(this->player.angle)*1.2; vel2 += sin(this->player.angle)*1.2;}
+	if (this->down == 1) {vel1 -= cos(this->player.angle)*1.2; vel2 -= sin(this->player.angle)*1.2;}
+	if (this->left == 1) {vel1 += sin(this->player.angle)*1.2; vel2 -= cos(this->player.angle)*1.2;}
+	if (this->right == 1) {vel1 -= sin(this->player.angle)*1.2; vel2 += cos(this->player.angle)*1.2;}
+	if (this->up == 1 || this->down == 1 || this->right == 1 || this->left == 1) {
+		acceleration = 0.4;
+	}
+	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
+	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
+	std::cout << this->player.velocity.x << ", " << this->player.velocity.y << std::endl;
+	this->MoveBy(vel1, vel2);
 	SDL_GetRelativeMouseState(&x, &y);
 	this->player.angle += x * 0.03;
 }

@@ -39,10 +39,16 @@ class Core{
         int x;
         int y;
 
+	struct Velocity {
+		int x;
+		int y;
+	};
+
         struct Player {
 			int x;
 			int y;
 			double angle;
+			Velocity velocity;
 			double pcos() {
 				double r = round(cos(angle));
 				return r;
@@ -54,11 +60,7 @@ class Core{
 		};
         Player player;
 
-        virtual void MoveUp(){};
-        virtual void MoveDown(){};
-        virtual void MoveLeft(){};
-        virtual void MoveRight(){};
-
+        virtual void MoveBy(int, int){};
 
 };
 
