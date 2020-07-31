@@ -130,5 +130,7 @@ void Peril::DoLines() {
                 this->DrawLine(((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
 
 	}
+	std::cout << gameover << std::endl;
+	gameover = Core::gameover;
 }
 
