@@ -22,13 +22,13 @@ class Core{
     private:
         void CreateRenderer();
         SDL_Window* window;
-        SDL_Renderer* renderer;
+        
 
         int width;
         int height;
 
     protected:
-        
+        SDL_Renderer* renderer;
         int up;
         int down;
         int left;
