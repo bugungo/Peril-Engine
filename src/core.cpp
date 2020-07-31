@@ -40,7 +40,6 @@ void Core::GetInput() {
 	if (this->right == 1) {this->MoveRight();}
 	SDL_GetRelativeMouseState(&x, &y);
 	this->player.angle += x * 0.03;
-	std::cout << this->player.angle << std::endl;
 }
 
 void Core::Delay(int a){

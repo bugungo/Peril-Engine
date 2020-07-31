@@ -149,6 +149,7 @@ int main(int argc, char *args[]) {
 		}
 		SDL_GetRelativeMouseState(&x,&y);
 		player.angle += x * 0.03;
+		std::cout << player.angle << std::endl;
 		for (int i=0; i<tlines.size(); i++) {
 			tlines[i].x1 = lines[i].x1 - player.x;
 			tlines[i].y1 = lines[i].y1 - player.y;

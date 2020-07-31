@@ -25,10 +25,10 @@ void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &
 	tline.y1 = line.y1 - players.y;
 	tline.x2 = line.x2 - players.x;
 	tline.y2 = line.y2 - players.y;
-	tline.z1 = tline.x1 * players.pcos() + tline.y1 * players.psin();
-	tline.z2 = tline.x2 * players.pcos() + tline.y2 * players.psin();
-	tline.x1 = tline.x1 * players.psin() - tline.y1 * players.pcos();
-	tline.x2 = tline.x2 * players.psin() - tline.y2 * players.pcos();
+	tline.z1 = tline.x1 * cos(players.angle) + tline.y1 * sin(players.angle);
+	tline.z2 = tline.x2 * cos(players.angle) + tline.y2 * sin(players.angle);
+	tline.x1 = tline.x1 * sin(players.angle) - tline.y1 * cos(players.angle);
+	tline.x2 = tline.x2 * sin(players.angle) - tline.y2 * cos(players.angle);
 	if (tline.z1 <= 0) {
 		tline.x1 = (1-tline.z1)*(tline.x2-tline.x1)/((tline.z2-tline.z1)+0.5)+tline.x1;
 		tline.z1 = 1;
@@ -87,7 +87,6 @@ void Peril::LoadMap(std::string filename) {
 }
 
 void Peril::MoveUp() {
-	std::cout << "Move up" << std::endl;
 	Peril::player.x += Peril::player.pcos();
 	Peril::player.y += Peril::player.psin();
 }
@@ -130,7 +129,6 @@ void Peril::DoLines() {
                 this->DrawLine(((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
 
 	}
-	std::cout << gameover << std::endl;
 	gameover = Core::gameover;
 }
 
