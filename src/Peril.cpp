@@ -3,6 +3,7 @@
 #include <fstream>
 #include <math.h>
 #include <vector>
+#include <algorithm>
 
 #include "Peril.h"
 
@@ -19,6 +20,12 @@
 //	x = Peril::FNcross(x, x1-x2, y, x3-x4) / det;
 //	y = Peril::FNcross(x, y1-y2, y, y3-y4) / det;
 //}
+
+int Peril::LineDistance(int x, int y, int x2, int y2) {
+	int a = sqrt(((x2-x)*(x2-x))+((y2-y)*(y2-y)));
+	return a;
+}
+
 void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &tlin)  {
 	Peril::Line tline = line;
 	tline.x1 = line.x1 - players.x;
@@ -92,12 +99,32 @@ void Peril::MoveBy(int x, int y) {
 }
 
 void Peril::DoLines() {
-	for (int i=0; i<Peril::tlines.size(); i++) {
-		TransformLine(Peril::lines[i], Peril::player, Peril::tlines[i]);
+	liness.clear();
+	dlines.clear();
+	dliness.clear();
+	for (int i=0; i<Peril::lines.size(); i++) {
+		Peril::dline.dist = LineDistance(Peril::player.x, Peril::player.y, (lines[i].x1+lines[i].x2)/2, (lines[i].y1+lines[i].y2)/2);
+		Peril::dline.num = i;
+		Peril::dliness.push_back(Peril::dline.dist);
+		Peril::dlines.push_back(Peril::dline);
+		std::cout << dlines[i].num << std::endl;
+	}
+	sort(Peril::dliness.begin(), Peril::dliness.end());
+	reverse(Peril::dliness.begin(), Peril::dliness.end());
+	for (int i=0; i<Peril::dlines.size(); i++) {
+		for (int j=0; j<Peril::dlines.size(); j++) {
+			if (Peril::dlines[j].dist == Peril::dliness[i]) {
+				Peril::liness.push_back(Peril::lines[Peril::dlines[j].num]);
+				std::cout << Peril::dlines[j].num << std::endl;
+			}
+		}
 	}
 	for (int i=0; i<Peril::tlines.size(); i++) {
-	        int x1 = -tlines[i].x1 * 200 / tlines[i].z1;
-	        int x2 = -tlines[i].x2 * 200 / tlines[i].z2;
+		TransformLine(Peril::liness[i], Peril::player, Peril::tlines[i]);
+	}
+	for (int i=0; i<Peril::tlines.size(); i++) {
+	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
+	        int x2 = -tlines[i].x2 * 160 / tlines[i].z2;
 		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1;
 		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1;
 		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2;
@@ -106,10 +133,10 @@ void Peril::DoLines() {
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 		short int wallx[] = {(Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2};
 		short int wally[] = {(Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a, (Peril::SCREEN_SIZE/2)+y2a};
-        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
-        short int wallx1[] = {(Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1};
-        short int wally1[] = {(Peril::SCREEN_SIZE/2)+y1b, (Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a};
-    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
+	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
+	        short int wallx1[] = {(Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1};
+	        short int wally1[] = {(Peril::SCREEN_SIZE/2)+y1b, (Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a};
+	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
 		
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
@@ -133,8 +160,10 @@ void Peril::Move(int up, int down, int left, int right){
 	}
 	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
 	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
-	std::cout << this->player.velocity.x << ", " << this->player.velocity.y << std::endl;
 	this->MoveBy(vel1, vel2);
 	SDL_GetRelativeMouseState(&x, &y);
 	this->player.angle += x * 0.03;
+	if (this->player.angle > 6.3 || this->player.angle < -6.3) {
+		this->player.angle = 0;
+	}
 }

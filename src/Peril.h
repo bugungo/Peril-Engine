@@ -29,17 +29,26 @@ class Peril : public Core{
 			int z1;
 			int z2;
 		};
+		struct DLine{
+			int num;
+			int dist;
+		};
 		//SDL_Window* window;
 		//SDL_Renderer* renderer;
 		std::vector<Line> lines;
 		std::vector<Line> tlines;
+		std::vector<Line> liness;
+		std::vector<DLine> dlines;
+		std::vector<int> dliness;
 		Line templine;
+		DLine dline;
 		//Player player;
 		int FNcross(int, int, double, double);
 		void Intersect(int, int, int ,int, double, double, int, int, int&, int&);
 		void TransformLine(Line, Player, Line&);
 		void MoveBy(int, int);
 		void Move(int, int, int, int);
+		int LineDistance(int, int, int, int);
 		int up = 0;
 		int down = 0;
 		int left = 0;
