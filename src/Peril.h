@@ -40,6 +40,7 @@ class Peril : public Core{
 		std::vector<Line> liness;
 		std::vector<DLine> dlines;
 		std::vector<int> dliness;
+		std::vector<int> tempd;
 		Line templine;
 		DLine dline;
 		//Player player;

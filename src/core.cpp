@@ -15,7 +15,6 @@ void Core::CreateRenderer(){
 }
 
 void Core::GetInput() {
-	std::cout << this->player.angle << std::endl;
 	SDL_Event event;
 	
 	if (SDL_PollEvent(&event)) {
