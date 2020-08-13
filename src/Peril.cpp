@@ -7,19 +7,21 @@
 
 #include "Peril.h"
 
-//int Peril::FNcross(int x1, int y1, double x2, double y2) {
-//	int a = (x1*y2)-(y1*x2);
-//	return a;
-//}
+int Peril::FNcross(int x1, int y1, double x2, double y2) {
+	int a = (x1*y2)-(y1*x2);
+	return a;
+}
 
-//void Intersect(int x1, int y1, int x2, int y2, double x3, double y3, int x4, int y4, int& x, int& y) {
+void Peril::Intersect(int x1, int y1, int x2, int y2, double x3, double y3, int x4, int y4, int& x, int& y) {
 //	x = Peril::FNcross(x1, y1, x2, y2);
 //	y = Peril::FNcross(x3, y3, x4, y4);
 //	int det = Peril::FNcross(x1-x2, y1-y2, x3-x4, y3-y4);
 //	if (det == 0) {det = 1;}
 //	x = Peril::FNcross(x, x1-x2, y, x3-x4) / det;
 //	y = Peril::FNcross(x, y1-y2, y, y3-y4) / det;
-//}
+	x = FNcross(FNcross(x1, y1, x2, y2), (x1)-(x2), FNcross(x3, y3, x4, y4), (x3)-(x4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.5);
+	y = FNcross(FNcross(x1, y1, x2, y2), (y1)-(y2), FNcross(x3, y3, x4, y4), (y3)-(y4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.5);	
+}
 
 int Peril::LineDistance(int x, int y, int x2, int y2) {
 	int a = sqrt(((x2-x)*(x2-x))+((y2-y)*(y2-y)));
@@ -36,16 +38,46 @@ void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &
 	tline.z2 = tline.x2 * cos(players.angle) + tline.y2 * sin(players.angle);
 	tline.x1 = tline.x1 * sin(players.angle) - tline.y1 * cos(players.angle);
 	tline.x2 = tline.x2 * sin(players.angle) - tline.y2 * cos(players.angle);
-	if (tline.z1 <= 0) {
-		tline.x1 = (1-tline.z1)*(tline.x2-tline.x1)/((tline.z2-tline.z1)+0.5)+tline.x1;
-		tline.z1 = 1;
+//	if (tline.z1 <= 0) {
+//		tline.x1 = (1-tline.z1)*(tline.x2-tline.x1)/((tline.z2-tline.z1)+0.5)+tline.x1;
+//		tline.z1 = 1;
+//	}
+//	if (tline.z2 <= 0) {
+//              tline.x2 = (1-tline.z2)*(tline.x1-tline.x2)/((tline.z1-tline.z2)+0.5)+tline.x2;
+//		tline.z2 = 1;
+//	}
+	if (tline.z1 <= 0 || tline.z2 <= 0) {
+//        	float nearz = 1e-4f, farz = 5, nearside = 1e-5f, farside = 20.f;
+		float nearz = 0.0001, farz = 5, nearside = 0.00001, farside = 20;
+		int ix = 0;
+		int iy = 0;
+		int ix2 = 0;
+		int iy2 = 0;
+		Intersect(tline.x1, tline.z1, tline.x2, tline.z2, -nearside, nearz, -farside, farz, ix, iy);
+		Intersect(tline.x1, tline.z1, tline.x2, tline.z2, nearside, nearz, farside, farz, ix2, iy2);
+		if (tline.z1 < nearz) {
+			if (iy > 0) {
+				tline.x1 = ix; tline.z1 = iy;
+			}
+			else {
+				tline.x1 = ix2; tline.z1 = iy2;
+			}
+		}
+		if (tline.z2 < nearz) {
+			if (iy > 0) {
+				tline.x2 = ix; tline.z2 = iy;
+			}
+			else {
+				tline.x2 = ix2; tline.z2 = iy2;
+			}
+		}
+		if (tline.z1 == 0) {
+			tline.z1 = 1;
+		}
+		if (tline.z2 == 0) {
+			tline.z2 = 1;
+		}
 	}
-	if (tline.z2 <= 0) {
-                tline.x2 = (1-tline.z2)*(tline.x1-tline.x2)/((tline.z1-tline.z2)+0.5)+tline.x2;
-		tline.z2 = 1;
-	}
-	if (tline.z1 <= 0) {tline.z1 = 1;}
-	if (tline.z2 <= 0) {tline.z2 = 1;}
 	tlin = tline;
 }
 
@@ -107,16 +139,27 @@ void Peril::DoLines() {
 		Peril::dline.num = i;
 		Peril::dliness.push_back(Peril::dline.dist);
 		Peril::dlines.push_back(Peril::dline);
-		std::cout << dlines[i].num << std::endl;
 	}
 	sort(Peril::dliness.begin(), Peril::dliness.end());
 	reverse(Peril::dliness.begin(), Peril::dliness.end());
 	for (int i=0; i<Peril::dlines.size(); i++) {
 		for (int j=0; j<Peril::dlines.size(); j++) {
 			if (Peril::dlines[j].dist == Peril::dliness[i]) {
-				Peril::liness.push_back(Peril::lines[Peril::dlines[j].num]);
-				std::cout << Peril::dlines[j].num << std::endl;
+				int ix = 0;
+				int iy = 0;
+				int dnum = Peril::dlines[j].num;
+                                Peril::liness.push_back(Peril::lines[dnum]);
 			}
+		}
+	}
+        int ix = 0;
+        int iy = 0;
+	for (int i=1; i<Peril::liness.size(); i++) {
+		Intersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, (Peril::liness[Peril::liness.size()-1].x1+Peril::liness[Peril::liness.size()-1].x2)/2, (Peril::liness[Peril::liness.size()-1].y1+Peril::liness[Peril::liness.size()-1].y2)/2, ix, iy);
+		std::cout << ix << ", " << iy << std::endl;
+		if (ix > Peril::liness[i].x1 && ix < Peril::liness[i].x2 && iy > Peril::liness[i].y1 && iy < Peril::liness[i].y2) {
+//		if (ix > 0 && iy > 0) {
+			Peril::liness.erase(Peril::liness.begin()+i);
 		}
 	}
 	for (int i=0; i<Peril::tlines.size(); i++) {
