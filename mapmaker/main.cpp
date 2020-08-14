@@ -7,6 +7,16 @@
 
 const int SCREEN_SIZE = 400;
 
+int Grid(int a) {
+        int b = 0;
+        for (int i=0; i<a; i = i+8) {
+                b++;
+        }
+      b--;
+	b = b*8;
+        return b;
+}
+
 int main(int argc, char *args[]) {
 	SDL_Window* window = NULL;
 	SDL_Renderer* renderer = NULL;
@@ -90,16 +100,16 @@ int main(int argc, char *args[]) {
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
 				if (event.button.button == SDL_BUTTON_LEFT) {
 					if (lstart == 0) {
-						templine.x1 = event.button.x;
-						templine.y1 = event.button.y;
+						templine.x1 = Grid(event.button.x);
+						templine.y1 = Grid(event.button.y);
 						templine.x2 = 0;
 						templine.y2 = 0;
 						lstart = 1;
 					}
 					else {
 						lstart = 0;
-						templine.x2 = event.button.x;
-						templine.y2 = event.button.y;
+						templine.x2 = Grid(event.button.x);
+						templine.y2 = Grid(event.button.y);
 						lines.push_back(templine);
 					}
 				}

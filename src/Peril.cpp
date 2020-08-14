@@ -168,7 +168,7 @@ void Peril::DoLines() {
 		Intersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, (Peril::liness[Peril::liness.size()-1].x1+Peril::liness[Peril::liness.size()-1].x2)/2, (Peril::liness[Peril::liness.size()-1].y1+Peril::liness[Peril::liness.size()-1].y2)/2, ix, iy);
 		if (ix > Peril::liness[i].x1 && ix < Peril::liness[i].x2 && iy > Peril::liness[i].y1 && iy < Peril::liness[i].y2) {
 //		if (ix > 0 && iy > 0) {
-			Peril::liness.erase(Peril::liness.begin()+i);
+//			Peril::liness.erase(Peril::liness.begin()+i);
 		}
 	}
 	for (int i=0; i<Peril::tlines.size(); i++) {
