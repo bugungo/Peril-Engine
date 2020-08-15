@@ -47,7 +47,7 @@ class Peril : public Core{
 		int FNcross(int, int, double, double);
 		void Intersect(int, int, int ,int, double, double, int, int, int&, int&);
 		void TransformLine(Line, Player, Line&);
-		void MoveBy(int, int);
+		void MoveBy(double, double);
 		void Move(int, int, int, int);
 		int LineDistance(int, int, int, int);
 		int up = 0;
@@ -58,9 +58,9 @@ class Peril : public Core{
 		int y;
 	public:
 		Peril(){
-			Peril::player.x = 0;
-			Peril::player.y = 0;
-			Peril::player.angle = 0;
+			Peril::player.x = 0.0;
+			Peril::player.y = 0.0;
+			Peril::player.angle = 0.0;
 		};
 		const int SCREEN_SIZE = 400;
 		int gameover = 0;

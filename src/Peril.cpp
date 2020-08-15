@@ -125,9 +125,8 @@ void Peril::LoadMap(std::string filename) {
         }
 }
 
-void Peril::MoveBy(int x, int y) {
-	Peril::player.x += x;
-	Peril::player.y += y;
+void Peril::MoveBy(double x, double y) {
+
 }
 
 void Peril::DoLines() {
@@ -201,19 +200,29 @@ void Peril::DoLines() {
 
 void Peril::Move(int up, int down, int left, int right){
 	float acceleration = 0;
-	float vel1 = 0;
-	float vel2 = 0;
+	float vel1 = 0.0;
+	float vel2 = 0.0;
 	if (up == 1) {vel1 += cos(this->player.angle)*1.2; vel2 += sin(this->player.angle)*1.2;}
 	if (down == 1) {vel1 -= cos(this->player.angle)*1.2; vel2 -= sin(this->player.angle)*1.2;}
 	if (left == 1) {vel1 += sin(this->player.angle)*1.2; vel2 -= cos(this->player.angle)*1.2;}
 	if (right == 1) {vel1 -= sin(this->player.angle)*1.2; vel2 += cos(this->player.angle)*1.2;}
-	if (up == 1 || down == 1 || right == 1 || left == 1) {
+	
+        std::cout << "up: " << up << ", down: " << down <<", left: " << left << ", right: " << right <<std::endl;
+
+        if (up == 1 || down == 1 || right == 1 || left == 1) {
 		acceleration = 0.4;
 	}
 	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
 	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
-	this->MoveBy(vel1, vel2);
-	SDL_GetRelativeMouseState(&x, &y);
+        
+        std::cout << "vel1: " << vel1 << ", vel2 " << vel2 << std::endl;
+	//this->MoveBy(vel1, vel2);
+	
+        Peril::player.x += vel1;
+	Peril::player.y += vel2;
+        std::cout << "Moved: " << player.x << ", " << player.y << std::endl;
+	
+        SDL_GetRelativeMouseState(&x, &y);
 	this->player.angle += x * 0.03;
 	if (this->player.angle > 6.3 || this->player.angle < -6.3) {
 		this->player.angle = 0;

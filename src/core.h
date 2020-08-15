@@ -40,13 +40,13 @@ class Core{
         int y;
 
 	struct Velocity {
-		int x;
-		int y;
+		double x;
+		double y;
 	};
 
         struct Player {
-			int x;
-			int y;
+			double x;
+			double y;
 			double angle;
 			Velocity velocity;
 			double pcos() {
@@ -60,7 +60,7 @@ class Core{
 		};
         Player player;
 
-        virtual void MoveBy(int, int){};
+        virtual void MoveBy(double, double){};
         virtual void Move(int, int, int, int){};
 
 };
