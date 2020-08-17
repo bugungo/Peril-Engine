@@ -82,7 +82,7 @@ void Peril::TransformLine(Peril::Line line, Peril::Player players, Peril::Line &
 }
 
 void Peril::InitPeril() {
-	
+
 }
 
 void Peril::LoadMap(std::string filename) {
@@ -182,13 +182,15 @@ void Peril::DoLines() {
 		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2;
 
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
-		short int wallx[] = {(Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2};
-		short int wally[] = {(Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a, (Peril::SCREEN_SIZE/2)+y2a};
+
+		// Is casting everything to short int really the _best_ way to do this?
+		short int wallx[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2)};
+		short int wally[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2a)};
 	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
-	        short int wallx1[] = {(Peril::SCREEN_SIZE/2)+x1, (Peril::SCREEN_SIZE/2)+x2, (Peril::SCREEN_SIZE/2)+x1};
-	        short int wally1[] = {(Peril::SCREEN_SIZE/2)+y1b, (Peril::SCREEN_SIZE/2)+y2b, (Peril::SCREEN_SIZE/2)+y1a};
+	        short int wallx1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1)};
+	        short int wally1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y1b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a)};
 	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
-		
+
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b));
@@ -206,7 +208,7 @@ void Peril::Move(int up, int down, int left, int right){
 	if (down == 1) {vel1 -= cos(this->player.angle)*1.2; vel2 -= sin(this->player.angle)*1.2;}
 	if (left == 1) {vel1 += sin(this->player.angle)*1.2; vel2 -= cos(this->player.angle)*1.2;}
 	if (right == 1) {vel1 -= sin(this->player.angle)*1.2; vel2 += cos(this->player.angle)*1.2;}
-	
+
         std::cout << "up: " << up << ", down: " << down <<", left: " << left << ", right: " << right <<std::endl;
 
         if (up == 1 || down == 1 || right == 1 || left == 1) {
@@ -214,14 +216,14 @@ void Peril::Move(int up, int down, int left, int right){
 	}
 	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
 	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
-        
+
         std::cout << "vel1: " << vel1 << ", vel2 " << vel2 << std::endl;
 	//this->MoveBy(vel1, vel2);
-	
+
         Peril::player.x += vel1;
 	Peril::player.y += vel2;
         std::cout << "Moved: " << player.x << ", " << player.y << std::endl;
-	
+
         SDL_GetRelativeMouseState(&x, &y);
 	this->player.angle += x * 0.03;
 	if (this->player.angle > 6.3 || this->player.angle < -6.3) {
