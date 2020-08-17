@@ -2,7 +2,7 @@ project(Peril-Engine)
 
 cmake_minimum_required(VERSION 3.9)
 
-set(CMAKE_CXX_FLAGS"-Wall -Wextra -Wpedantic -Wconversion -Wcast-align -Wunused -Wshadow -Wold-style-cast -Wpointer-arith -Wcast-qual -Wno-missing-braces")
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Wpedantic -Wconversion -Wcast-align -Wunused -Wshadow -Wold-style-cast -Wpointer-arith -Wcast-qual -Wno-missing-braces")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g")
