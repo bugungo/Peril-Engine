@@ -16,7 +16,7 @@ void Core::CreateRenderer(){
 
 void Core::GetInput() {
 	SDL_Event event;
-	
+
 	if (SDL_PollEvent(&event)) {
 		switch(event.type) {
 			case SDL_QUIT: this->gameover = 1; break;
@@ -42,6 +42,13 @@ void Core::Delay(int a){
     SDL_Delay(a);      // filledPolygonRGBA(Peril::render
 }
 
+unsigned int Core::GetTicksSinceLastCall(){
+    unsigned int ticks = SDL_GetTicks();
+    unsigned int ticksSince = ticks - gameticks;
+    gameticks = ticks;
+    return ticksSince;
+}
+
 void Core::DrawLine(int x1, int y1, int x2, int y2){
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0);
     SDL_RenderDrawLine(renderer, x1, y1, x2, y2);
@@ -51,5 +58,5 @@ void Core::Redraw(){
 	 SDL_RenderPresent(this->renderer);
     SDL_SetRenderDrawColor(this->renderer, 0xFF, 0xFF, 0xFF, 0xFF);
 	SDL_RenderClear(this->renderer);
-   
+
 }
