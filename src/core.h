@@ -7,7 +7,7 @@
 
 class Core{
     public:
-        Core(){SDL_Init(SDL_INIT_EVERYTHING);};
+        Core();
         void CreateWindow(std::string, int, int);
         void DrawLine(int, int, int, int);
         void Delay(int);

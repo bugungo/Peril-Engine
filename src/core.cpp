@@ -1,5 +1,13 @@
 #include "core.h"
 
+Core::Core(){
+    SDL_Init(SDL_INIT_EVERYTHING);
+    up = 0;
+    down = 0;
+    left = 0;
+    right = 0;
+    gameover = 0;
+}
 
 void Core::CreateWindow(std::string title, int in_width, int in_height){
     Core::window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 400, 400, SDL_WINDOW_SHOWN);
