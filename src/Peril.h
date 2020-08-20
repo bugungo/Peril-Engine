@@ -28,6 +28,8 @@ class Peril : public Core{
 			int y2;
 			int z1;
 			int z2;
+			int clr;
+			int next;
 		};
 		struct DLine{
 			int num;
@@ -38,6 +40,7 @@ class Peril : public Core{
 		std::vector<Line> lines;
 		std::vector<Line> tlines;
 		std::vector<Line> liness;
+		std::vector<Line> linesss;
 		std::vector<DLine> dlines;
 		std::vector<int> dliness;
 		std::vector<int> tempd;
@@ -46,6 +49,7 @@ class Peril : public Core{
 		//Player player;
 		int FNcross(int, int, double, double);
 		void Intersect(int, int, int ,int, double, double, int, int, int&, int&);
+		bool DoIntersect(int, int, int, int, int, int, int ,int, int&, int&);
 		void TransformLine(Line, Player, Line&);
 		void MoveBy(double, double);
 		void Move(int, int, int, int);

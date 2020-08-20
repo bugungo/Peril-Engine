@@ -19,8 +19,39 @@ void Peril::Intersect(int x1, int y1, int x2, int y2, double x3, double y3, int 
 //	if (det == 0) {det = 1;}
 //	x = Peril::FNcross(x, x1-x2, y, x3-x4) / det;
 //	y = Peril::FNcross(x, y1-y2, y, y3-y4) / det;
-	x = FNcross(FNcross(x1, y1, x2, y2), (x1)-(x2), FNcross(x3, y3, x4, y4), (x3)-(x4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.5);
-	y = FNcross(FNcross(x1, y1, x2, y2), (y1)-(y2), FNcross(x3, y3, x4, y4), (y3)-(y4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.5);
+	x = FNcross(FNcross(x1, y1, x2, y2), (x1)-(x2), FNcross(x3, y3, x4, y4), (x3)-(x4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.1);
+	y = FNcross(FNcross(x1, y1, x2, y2), (y1)-(y2), FNcross(x3, y3, x4, y4), (y3)-(y4)) / (FNcross((x1)-(x2), (y1)-(y2), (x3)-(x4), (y3)-(y4)) + 0.1);
+}
+
+bool Peril::DoIntersect(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, int& ix, int& iy) {
+	int tem;
+	Intersect(x1, y1, x2, y2, x3, y3, x4, y4, ix, iy);
+	if (x1 > x2) {
+		tem = x1;
+		x1 = x2;
+		x2 = tem;
+	}
+	if (y1 > y2) {
+		tem = y1;
+		y1 = y2;
+		y2 = tem;
+	}
+	if (x3 > x4) {
+		tem = x3;
+		x3 = x4;
+		x4 = tem;
+	}
+	if (y3 > y4) {
+		tem = y3;
+		y3 = y4;
+		y4 = tem;
+	}
+	if (ix >= x1 && ix <= x2 && iy >= y1 && iy <= y2 && ix >= x3 && ix <= x4 && iy >= y3 && iy <= y4) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 int Peril::LineDistance(int x, int y, int x2, int y2) {
@@ -150,46 +181,89 @@ void Peril::DoLines() {
 				for (int k=0; k<Peril::tempd.size(); k++) {
 					if (dnum == tempd[k]) {
 						lcheck = 1;
-						std::cout << "bang" << std::endl;
 					}
 				}
 				if (lcheck == 0) {
 	                                Peril::tempd.push_back(dnum);
 	                               	Peril::liness.push_back(Peril::lines[dnum]);
-					std::cout << dnum << std::endl;
+					Peril::lines[dnum].clr = Peril::dlines[dnum].dist;
 				}
 			}
 		}
 	}
-        int ix = 0;
-        int iy = 0;
-	for (int i=1; i<Peril::liness.size(); i++) {
-		Intersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, (Peril::liness[Peril::liness.size()-1].x1+Peril::liness[Peril::liness.size()-1].x2)/2, (Peril::liness[Peril::liness.size()-1].y1+Peril::liness[Peril::liness.size()-1].y2)/2, ix, iy);
-		if (ix > Peril::liness[i].x1 && ix < Peril::liness[i].x2 && iy > Peril::liness[i].y1 && iy < Peril::liness[i].y2) {
-//		if (ix > 0 && iy > 0) {
-//			Peril::liness.erase(Peril::liness.begin()+i);
+	for (int i=0; i<Peril::lines.size(); i++) {
+		Peril::lines[i].clr = 70;
+	}
+//	Peril::linesss = Peril::liness;
+	Peril::linesss.clear();
+	Peril::tempd.clear();
+	for (int i=0; i<Peril::liness.size(); i++) {
+		int ix = 0;
+		int iy = 0;
+		int ix1 = 0;
+		int iy1 = 0;
+		int chek = 0;
+		int tnum = 0;
+		for (int j=0; j<Peril::liness.size(); j++) {
+			int check1 = 0;
+			int check2 = 0;
+			int check3 = 0;
+			if (i != j) {
+			if (DoIntersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, Peril::liness[j].x1, Peril::liness[j].y1, ix, iy)) {
+				check1 = 1;
+				chek = 1;
+			}
+			if (DoIntersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, Peril::liness[j].x2, Peril::liness[j].y2, ix1, iy1)) {
+				check2 = 1;
+				chek = 1;
+			}
+			if (check1 == 1 || check2 == 1) {
+				//if j is blocked by i
+				for (int k=0; k<Peril::tempd.size(); k++) {
+					if (Peril::tempd[k] == j) {
+						tnum = 1;
+					}
+				}
+				if (tnum == 0) {
+					Peril::linesss.push_back(Peril::liness[j]);
+					Peril::tempd.push_back(j);
+				}
+			}
+			}
+		}
+		if (chek == 0) {
+			//if i didnt block any other walls
+			Peril::linesss.push_back(Peril::liness[i]);
+			Peril::tempd.push_back(i);
 		}
 	}
-	for (int i=0; i<Peril::tlines.size(); i++) {
-		TransformLine(Peril::liness[i], Peril::player, Peril::tlines[i]);
-	}
-	for (int i=0; i<Peril::tlines.size(); i++) {
-	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
-	        int x2 = -tlines[i].x2 * 160 / tlines[i].z2;
-		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1;
-		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1;
-		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2;
-		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2;
+        for (int i=0; i<Peril::liness.size(); i++) {
+                TransformLine(Peril::linesss[i], Peril::player, Peril::tlines[i]);
+        }
+//	int tnext = 0;
+	for (int tnext=0; tnext<Peril::liness.size(); tnext++) {
+//		if (i != 0 && i != Peril::liness.size()-1) {
+//			tnext = Peril::tlines[tnext].next;
+//		}
+//		else {
+//			tnext = i;
+//		}
+	        int x1 = -tlines[tnext].x1 * 160 / tlines[tnext].z1;
+	        int x2 = -tlines[tnext].x2 * 160 / tlines[tnext].z2;
+		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[tnext].z1;
+		int y1b = (Peril::SCREEN_SIZE*2) / tlines[tnext].z1;
+		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[tnext].z2;
+		int y2b = (Peril::SCREEN_SIZE*2) / tlines[tnext].z2;
 
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 
 		// Is casting everything to short int really the _best_ way to do this?
 		short int wallx[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2)};
 		short int wally[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2a)};
-	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, 100, 100, 100, 255);
+	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, Peril::lines[tnext].clr, Peril::lines[tnext].clr, Peril::lines[tnext].clr, 255);
 	        short int wallx1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1)};
 	        short int wally1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y1b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a)};
-	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, 100, 100, 100, 255);
+	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, Peril::lines[tnext].clr, Peril::lines[tnext].clr, Peril::lines[tnext].clr, 255);
 
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
