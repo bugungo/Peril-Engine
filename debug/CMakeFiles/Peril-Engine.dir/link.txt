@@ -1,1 +1,0 @@
-/usr/bin/c++  -Wall -Wextra -Wpedantic -Wconversion -Wcast-align -Wunused -Wshadow -Wold-style-cast -Wpointer-arith -Wcast-qual -Wno-missing-braces   CMakeFiles/Peril-Engine.dir/src/core.cpp.o CMakeFiles/Peril-Engine.dir/src/Peril.cpp.o CMakeFiles/Peril-Engine.dir/src/main.cpp.o  -o Peril-Engine  -lSDL2 -lSDL2_gfx -lSDL2 -lSDL2_gfx 

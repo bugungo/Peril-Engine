@@ -1,3 +1,0 @@
-/home/shithead/git/Peril-Engine/debug/CMakeFiles/rebuild_cache.dir
-/home/shithead/git/Peril-Engine/debug/CMakeFiles/edit_cache.dir
-/home/shithead/git/Peril-Engine/debug/CMakeFiles/Peril-Engine.dir
