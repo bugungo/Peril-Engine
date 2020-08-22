@@ -7,7 +7,11 @@
 
 class Core{
     public:
+<<<<<<< HEAD
         Core();
+=======
+        Core(){SDL_Init(SDL_INIT_EVERYTHING); gameticks = 0;};
+>>>>>>> fps-movement-fix
         void CreateWindow(std::string, int, int);
         void DrawLine(int, int, int, int);
         void Delay(int);
@@ -15,14 +19,19 @@ class Core{
 
         void GetInput();
 
+        unsigned int GetTicksSinceLastCall();
+
         const int get_width();
         const int get_height();
 
         int gameover;
     private:
+
+        unsigned int gameticks;
+
         void CreateRenderer();
         SDL_Window* window;
-        
+
 
         int width;
         int height;
@@ -34,7 +43,7 @@ class Core{
         int left;
         int right;
 
-        
+
 
         int x;
         int y;

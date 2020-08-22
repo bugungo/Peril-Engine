@@ -12,7 +12,7 @@ int main(int argc, char *args[]) {
 	peril.LoadMap(fn);
 	peril.gameover = 0;
 	while (!peril.gameover) {
-		peril.Delay(5);
+		//peril.Delay(5);
 		peril.GetInput();
 		peril.DoLines();
 		peril.Redraw();

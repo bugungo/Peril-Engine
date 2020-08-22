@@ -294,8 +294,10 @@ void Peril::Move(int up, int down, int left, int right){
         std::cout << "vel1: " << vel1 << ", vel2 " << vel2 << std::endl;
 	//this->MoveBy(vel1, vel2);
 
-        Peril::player.x += vel1;
-	Peril::player.y += vel2;
+
+        float timestep = static_cast<float>(this->GetTicksSinceLastCall()) / 20.f;
+        Peril::player.x += vel1 * timestep;
+        Peril::player.y += vel2 * timestep;
         std::cout << "Moved: " << player.x << ", " << player.y << std::endl;
 
         SDL_GetRelativeMouseState(&x, &y);
