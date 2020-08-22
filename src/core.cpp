@@ -7,6 +7,7 @@ Core::Core(){
     left = 0;
     right = 0;
     gameover = 0;
+    gameticks = 0;
 }
 
 void Core::CreateWindow(std::string title, int in_width, int in_height){
