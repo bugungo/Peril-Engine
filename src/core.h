@@ -7,11 +7,7 @@
 
 class Core{
     public:
-<<<<<<< HEAD
         Core();
-=======
-        Core(){SDL_Init(SDL_INIT_EVERYTHING); gameticks = 0;};
->>>>>>> fps-movement-fix
         void CreateWindow(std::string, int, int);
         void DrawLine(int, int, int, int);
         void Delay(int);
