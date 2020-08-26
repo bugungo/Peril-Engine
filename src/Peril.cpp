@@ -195,7 +195,7 @@ void Peril::DoLines() {
 		TransformLine(Peril::liness[i], Peril::player, Peril::tlines[i]);
 	}
 	for (int i=0; i<Peril::lines.size(); i++) {
-		Peril::lines[i].clr = 70;
+		Peril::lines[i].clr = i * 3;
 	}
 	for (int i=0; i<Peril::liness.size(); i++) {
 	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
@@ -213,7 +213,7 @@ void Peril::DoLines() {
 	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, Peril::lines[i].clr, Peril::lines[i].clr, Peril::lines[i].clr, 255);
 	        short int wallx1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1)};
 	        short int wally1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y1b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a)};
-	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, Peril::lines[i].clr, Peril::lines[i].clr-20, Peril::lines[i].clr-20, 255);
+	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, Peril::lines[i].clr, Peril::lines[i].clr, Peril::lines[i].clr, 255);
 
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
