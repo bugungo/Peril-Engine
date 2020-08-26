@@ -6,14 +6,20 @@
 #include <SDL2/SDL.h>
 
 const int SCREEN_SIZE = 400;
+const int LINE_SIZE = 10;
+
+int LineDistance(int x, int y, int x2, int y2) {
+        int a = sqrt(((x2-x)*(x2-x))+((y2-y)*(y2-y)));
+        return a;
+}
 
 int Grid(int a) {
         int b = 0;
-        for (int i=0; i<a; i = i+8) {
+        for (int i=0; i<a; i = i+10) {
                 b++;
         }
       b--;
-	b = b*8;
+	b = b*10;
         return b;
 }
 
@@ -74,6 +80,7 @@ int main(int argc, char *args[]) {
 	SDL_Event event;
 	int gameover = 0;
 	int lstart = 0;
+	int dogrid = 1;
 	int x, y;
 	int mx, my;
 
@@ -95,6 +102,16 @@ int main(int argc, char *args[]) {
 							save.close();
 						}
 					break;
+//					case SDLK_g:
+//						if (dogrid == 0) {
+//							std::cout << "Grid Overlay: On" << std::endl;
+//							dogrid = 1;
+//						}
+//						else {
+//							std::cout << "Grid Overlay: Off" << std::endl;
+//							dogrid = 0;
+//						}
+//					break;
 				}
 			}
 			if (event.type == SDL_MOUSEBUTTONDOWN) {
@@ -125,6 +142,14 @@ int main(int argc, char *args[]) {
 			templine.x2 = mx;
 			templine.y2 = my;
 			SDL_RenderDrawLine(renderer, templine.x1, templine.y1, templine.x2, templine.y2);
+		}
+
+		if (dogrid == 1) {
+			for (int i=0; i<SCREEN_SIZE; i += 10) {
+				for (int j=0; j<SCREEN_SIZE; j += 10) {
+					SDL_RenderDrawPoint(renderer, i, j);
+				}
+			}
 		}
 
 		for (int i=0; i<lines.size(); i++) {

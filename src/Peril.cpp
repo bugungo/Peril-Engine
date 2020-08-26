@@ -192,83 +192,33 @@ void Peril::DoLines() {
 		}
 	}
 	for (int i=0; i<Peril::lines.size(); i++) {
+		TransformLine(Peril::liness[i], Peril::player, Peril::tlines[i]);
+	}
+	for (int i=0; i<Peril::lines.size(); i++) {
 		Peril::lines[i].clr = 70;
 	}
-//	Peril::linesss = Peril::liness;
-	Peril::linesss.clear();
-	Peril::tempd.clear();
 	for (int i=0; i<Peril::liness.size(); i++) {
-		int ix = 0;
-		int iy = 0;
-		int ix1 = 0;
-		int iy1 = 0;
-		int chek = 0;
-		int tnum = 0;
-		for (int j=0; j<Peril::liness.size(); j++) {
-			int check1 = 0;
-			int check2 = 0;
-			int check3 = 0;
-			if (i != j) {
-			if (DoIntersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, Peril::liness[j].x1, Peril::liness[j].y1, ix, iy)) {
-				check1 = 1;
-				chek = 1;
-			}
-			if (DoIntersect(Peril::liness[i].x1, Peril::liness[i].y1, Peril::liness[i].x2, Peril::liness[i].y2, Peril::player.x, Peril::player.y, Peril::liness[j].x2, Peril::liness[j].y2, ix1, iy1)) {
-				check2 = 1;
-				chek = 1;
-			}
-			if (check1 == 1 || check2 == 1) {
-				//if j is blocked by i
-				for (int k=0; k<Peril::tempd.size(); k++) {
-					if (Peril::tempd[k] == j) {
-						tnum = 1;
-					}
-				}
-				if (tnum == 0) {
-					Peril::linesss.push_back(Peril::liness[j]);
-					Peril::tempd.push_back(j);
-				}
-			}
-			}
-		}
-		if (chek == 0) {
-			//if i didnt block any other walls
-			Peril::linesss.push_back(Peril::liness[i]);
-			Peril::tempd.push_back(i);
-		}
-	}
-        for (int i=0; i<Peril::liness.size(); i++) {
-                TransformLine(Peril::linesss[i], Peril::player, Peril::tlines[i]);
-        }
-//	int tnext = 0;
-	for (int tnext=0; tnext<Peril::liness.size(); tnext++) {
-//		if (i != 0 && i != Peril::liness.size()-1) {
-//			tnext = Peril::tlines[tnext].next;
-//		}
-//		else {
-//			tnext = i;
-//		}
-	        int x1 = -tlines[tnext].x1 * 160 / tlines[tnext].z1;
-	        int x2 = -tlines[tnext].x2 * 160 / tlines[tnext].z2;
-		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[tnext].z1;
-		int y1b = (Peril::SCREEN_SIZE*2) / tlines[tnext].z1;
-		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[tnext].z2;
-		int y2b = (Peril::SCREEN_SIZE*2) / tlines[tnext].z2;
+	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
+	        int x2 = -tlines[i].x2 * 160 / tlines[i].z2;
+		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1;
+		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1;
+		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2;
+		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2;
 
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 
 		// Is casting everything to short int really the _best_ way to do this?
 		short int wallx[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2)};
 		short int wally[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2a)};
-	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, Peril::lines[tnext].clr, Peril::lines[tnext].clr, Peril::lines[tnext].clr, 255);
+	        filledPolygonRGBA(Peril::renderer, wallx, wally, 3, Peril::lines[i].clr, Peril::lines[i].clr, Peril::lines[i].clr, 255);
 	        short int wallx1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+x1), static_cast<short int>((Peril::SCREEN_SIZE/2)+x2), static_cast<short int>((Peril::SCREEN_SIZE/2)+x1)};
 	        short int wally1[] = {static_cast<short int>((Peril::SCREEN_SIZE/2)+y1b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y2b), static_cast<short int>((Peril::SCREEN_SIZE/2)+y1a)};
-	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, Peril::lines[tnext].clr, Peril::lines[tnext].clr, Peril::lines[tnext].clr, 255);
+	    	filledPolygonRGBA(Peril::renderer, wallx1, wally1, 3, Peril::lines[i].clr, Peril::lines[i].clr-20, Peril::lines[i].clr-20, 255);
 
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a));
                 this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
-                this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b));
-                this->DrawLine(((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
+//                this->DrawLine(((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1a), ((SCREEN_SIZE/2)+x1), ((SCREEN_SIZE/2)+y1b));
+//                this->DrawLine(((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2a), ((SCREEN_SIZE/2)+x2), ((SCREEN_SIZE/2)+y2b));
 
 	}
 	gameover = Core::gameover;
