@@ -10,8 +10,14 @@ set(CMAKE_CXX_FLAGS_DEBUG "-g")
 
 
 if(BUILD_LIBRARY)
-    message(STATUS "Building Peril as library")
-    add_library(${PROJECT_NAME} src/core.cpp src/Peril.cpp)
+    if("${BUILD_LIBRARY}" STREQUAL "shared")
+        message(STATUS "Building Peril as a SHARED library")
+	add_library(${PROJECT_NAME} SHARED src/core.cpp src/Peril.cpp)
+        
+    else()
+	message(STATUS "Building Peril as a STATIC library")
+        add_library(${PROJECT_NAME} src/core.cpp src/Peril.cpp)
+    endif()
 else()
     message(STATUS "Building Peril as application")
     add_executable(${PROJECT_NAME} src/core.cpp src/Peril.cpp src/main.cpp)
