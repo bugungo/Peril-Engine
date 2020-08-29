@@ -27,7 +27,14 @@ include(FindPkgConfig)
 pkg_search_module(SDL2 REQUIRED sdl2)
 pkg_search_module(SDL2GFX REQUIRED SDL2_gfx)
 
-include_directories(${SDL2_INCLUDE_DIRS} ${SDL2GFX_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2GFX_LIBRARIES})
+if(BUILD_AS_MODULE)
+    set(PERIL_INCLUDE "${SDL2_INCLUDE_DIRS};${SDL2GFX_INCLUDE_DIRS};${CMAKE_CURRENT_SOURCE_DIR}/src/" CACHE INTERNAL "")
+    set(PERIL_LIBS "${SDL2_LIBRARIES};${SDL2GFX_LIBRARIES}" CACHE INTERNAL "")
+else()
 
-add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/test.map $<TARGET_FILE_DIR:${PROJECT_NAME}>/test.map)
+    include_directories(${SDL2_INCLUDE_DIRS} ${SDL2GFX_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES} ${SDL2GFX_LIBRARIES})
+
+    add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/test.map $<TARGET_FILE_DIR:${PROJECT_NAME}>/test.map)
+
+endif()
