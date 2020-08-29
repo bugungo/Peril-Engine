@@ -60,11 +60,25 @@ class Peril : public Core{
 		int right = 0;
 		int x;
 		int y;
+
+		double viewBobbingAmmount;
+		bool viewBobbingStage;
+		bool previousTickDidViewbob;
+
+		bool useViewbobbing;
+
 	public:
 		Peril(){
 			Peril::player.x = 0.0;
 			Peril::player.y = 0.0;
 			Peril::player.angle = 0.0;
+
+			viewBobbingAmmount = 0;
+			viewBobbingStage = false;
+			previousTickDidViewbob = false;
+
+			// change this to false if you dont like it
+			useViewbobbing = true;
 		};
 		const int SCREEN_SIZE = 400;
 		int gameover = 0;

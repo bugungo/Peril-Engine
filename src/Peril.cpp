@@ -200,10 +200,10 @@ void Peril::DoLines() {
 	for (int i=0; i<Peril::liness.size(); i++) {
 	        int x1 = -tlines[i].x1 * 160 / tlines[i].z1;
 	        int x2 = -tlines[i].x2 * 160 / tlines[i].z2;
-		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1;
-		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1;
-		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2;
-		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2;
+		int y1a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z1 + viewBobbingAmmount;
+		int y1b = (Peril::SCREEN_SIZE*2) / tlines[i].z1 + viewBobbingAmmount;
+		int y2a = (-(Peril::SCREEN_SIZE*2)) / tlines[i].z2 + viewBobbingAmmount;
+		int y2b = (Peril::SCREEN_SIZE*2) / tlines[i].z2 + viewBobbingAmmount;
 
 		// TODO: Eventually implement the following into Core.  Currently they are massively worked around
 
@@ -235,9 +235,49 @@ void Peril::Move(int up, int down, int left, int right){
 
         std::cout << "up: " << up << ", down: " << down <<", left: " << left << ", right: " << right <<std::endl;
 
+        float timestep = static_cast<float>(this->GetTicksSinceLastCall()) / 20.f;
+
         if (up == 1 || down == 1 || right == 1 || left == 1) {
-		acceleration = 0.4;
-	}
+            acceleration = 0.4;
+
+            if(useViewbobbing){
+                if(viewBobbingStage){
+                    viewBobbingAmmount += 0.5 * timestep;
+                    if(viewBobbingAmmount > 7){
+                        viewBobbingStage = false;
+                    }
+                }
+                else if(!viewBobbingStage){
+                    viewBobbingAmmount += -0.5 * timestep;
+                    if(viewBobbingAmmount < -7){
+                        viewBobbingStage = true;
+                    }
+                }
+
+                previousTickDidViewbob = true;
+            }
+        }
+        else if(previousTickDidViewbob){
+            if(viewBobbingAmmount < 0){
+                if(viewBobbingAmmount + 2 * timestep < 0){
+                    viewBobbingAmmount += 2 * timestep;
+                }
+                else if(viewBobbingAmmount < 0){
+                    viewBobbingAmmount = 0;
+                    previousTickDidViewbob = false;
+                }
+            }
+            else if(viewBobbingAmmount > 0){
+                if(viewBobbingAmmount - 2 * timestep > 0){
+                    viewBobbingAmmount -= 2 * timestep;
+                }
+                else if(viewBobbingAmmount > 0){
+                    viewBobbingAmmount = 0;
+                    previousTickDidViewbob = false;
+                }
+            }
+        }
+
 	this->player.velocity.x = this->player.velocity.x * (1-acceleration) + vel1 * acceleration;
 	this->player.velocity.y = this->player.velocity.y * (1-acceleration) + vel2 * acceleration;
 
@@ -245,7 +285,7 @@ void Peril::Move(int up, int down, int left, int right){
 	//this->MoveBy(vel1, vel2);
 
 
-        float timestep = static_cast<float>(this->GetTicksSinceLastCall()) / 20.f;
+
         Peril::player.x += vel1 * timestep;
         Peril::player.y += vel2 * timestep;
         std::cout << "Moved: " << player.x << ", " << player.y << std::endl;
